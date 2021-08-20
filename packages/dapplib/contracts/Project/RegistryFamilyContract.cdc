@@ -4,17 +4,9 @@ import FungibleToken from Flow.FungibleToken
 
 
 pub contract RegistrySampleContract: RegistryInterface {
-  access(self) var templates: {UInt32: Template}
-  access(self) var families: @{UInt32: Family}
 
-  pub var nextTemplateID: UInt32
-  pub var nextFamilyID: UInt32
-  pub var totalDappies: UInt64
-  
-  pub let CollectionStoragePath: StoragePath
-  pub let CollectionPublicPath: PublicPath
-  pub let AdminStoragePath: StoragePath
-
+  // Module related logic
+  //
   // Maps an address (of the customer/DappContract) to the amount
   // of tenants they have for a specific RegistryContract.
   access(contract) var clientTenants: {Address: UInt64}
@@ -62,8 +54,19 @@ pub contract RegistrySampleContract: RegistryInterface {
   ////////////////////////////////////////////////////////////////////////
   //
   // IDEA
-  // The idea is to implement a packs module based on crypto dappies implementation
+  // To implement a packs module based on crypto dappies implementation
   // https://github.com/bebner/crypto-dappy/blob/master/cadence/contracts/DappyContract.cdc
+
+  access(self) var templates: {UInt32: Template}
+  access(self) var families: @{UInt32: Family}
+
+  pub var nextTemplateID: UInt32
+  pub var nextFamilyID: UInt32
+  pub var totalDappies: UInt64
+  
+  pub let CollectionStoragePath: StoragePath
+  pub let CollectionPublicPath: PublicPath
+  pub let AdminStoragePath: StoragePath
 
   pub struct Template {
     pub let templateID: UInt32
