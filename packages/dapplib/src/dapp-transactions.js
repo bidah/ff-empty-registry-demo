@@ -7,6 +7,26 @@ const fcl = require("@onflow/fcl");
 
 module.exports = class DappTransactions {
 
+	static create_family_collection() {
+		return fcl.transaction`
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				import RegistryService from 0x01cf0e2f2f715450
+				  
+				  transaction {
+				    prepare(acct: AuthAccount) {
+				      let collection <- RegistryFamilyContract.createEmptyCollection()
+				      acct.save<@RegistryFamilyContract.Collection>(<-collection, to: RegistryFamilyContract.CollectionStoragePath)
+				      acct.link<&{RegistryFamilyContract.CollectionPublic}>(RegistryFamilyContract.CollectionPublicPath, target: RegistryFamilyContract.CollectionStoragePath)
+				    }
+				
+				    execute {
+				      log("created/saved/linked a new collection for families")
+				    }
+				  }
+				
+		`;
+	}
+
 	static registry_receive_auth_nft() {
 		return fcl.transaction`
 				import RegistryService from 0x01cf0e2f2f715450

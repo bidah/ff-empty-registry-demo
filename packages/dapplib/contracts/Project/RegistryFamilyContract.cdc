@@ -67,7 +67,7 @@ pub contract RegistryFamilyContract: RegistryInterface {
   pub let CollectionPublicPath: PublicPath
   pub let AdminStoragePath: StoragePath
 
-    pub fun createEmptyCollection(): @Collection {
+  pub fun createEmptyCollection(): @Collection {
     return <-create self.Collection()
   }
 

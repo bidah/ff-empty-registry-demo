@@ -9,7 +9,7 @@ import "../components/switch-widget.js";
 import DappLib from "@decentology/dappstarter-dapplib";
 import { LitElement, html, customElement, property } from "lit-element";
 
-@customElement('sample-harness')
+@customElement("sample-harness")
 export default class SampleHarness extends LitElement {
   @property()
   title;
@@ -28,38 +28,85 @@ export default class SampleHarness extends LitElement {
 
   render() {
     let content = html`
-      <page-body title="${this.title}" category="${this.category}" description="${this.description}">
-      
+      <page-body
+        title="${this.title}"
+        category="${this.category}"
+        description="${this.description}"
+      >
         <!-- Registry -->
-      
-        <action-card title="Registry - Get Auth NFT"
-          description="Register a Tenant with the RegistryService to get an AuthNFT" action="receiveAuthNFT" method="post"
-          fields="signer">
-          <account-widget field="signer" label="Account">
-          </account-widget>
+
+        <action-card
+          title="Registry - Get Auth NFT"
+          description="Register a Tenant with the RegistryService to get an AuthNFT"
+          action="receiveAuthNFT"
+          method="post"
+          fields="signer"
+        >
+          <account-widget field="signer" label="Account"> </account-widget>
         </action-card>
-      
-        <action-card title="Registry - Has Auth NFT" description="Checks to see if an account has an AuthNFT"
-          action="hasAuthNFT" method="get" fields="tenant">
+
+        <action-card
+          title="Registry - Has Auth NFT"
+          description="Checks to see if an account has an AuthNFT"
+          action="hasAuthNFT"
+          method="get"
+          fields="tenant"
+        >
           <account-widget field="tenant" label="Tenant Account">
           </account-widget>
         </action-card>
-      
-        <action-card title="RegistrySampleContract - Get Tenant"
-          description="Get an instance of a Tenant from RegistrySampleContract to have your own data" action="receiveTenant"
-          method="post" fields="signer">
-          <account-widget field="signer" label="Account">
-          </account-widget>
+
+        <action-card
+          title="RegistrySampleContract - Get Tenant"
+          description="Get an instance of a Tenant from RegistrySampleContract to have your own data"
+          action="receiveTenant"
+          method="post"
+          fields="signer"
+        >
+          <account-widget field="signer" label="Account"> </account-widget>
         </action-card>
-      
+
         <!-- Flow Token -->
-        <action-card title="Get Balance" description="Get the Flow Token balance of an account" action="getBalance"
-          method="get" fields="account">
-          <account-widget field="account" label="Account">
-          </account-widget>
+        <action-card
+          title="Get Balance"
+          description="Get the Flow Token balance of an account"
+          action="getBalance"
+          method="get"
+          fields="account"
+        >
+          <account-widget field="account" label="Account"> </account-widget>
         </action-card>
-      
-      
+
+        <!-- Flow Token -->
+        <action-card
+          title="Get Balance"
+          description="Get the Flow Token balance of an account"
+          action="getBalance"
+          method="get"
+          fields="account"
+        >
+          <account-widget field="account" label="Account"> </account-widget>
+        </action-card>
+
+        <div
+          style="background: papayawhip; border-radius: 5px; padding: 10px; margin-bottom: 10px"
+        >
+          <h1>
+            [WIP]: The idea is to first test the contract pieces and then turn
+            into module
+          </h1>
+        </div>
+        <!-- Start Family Contract -->
+        <action-card
+          title="create family collection"
+          description="create a family collection for families (packs)"
+          action="createFamilyCollection"
+          method="post"
+          fields="account"
+        >
+          <account-widget field="account" label="Account"> </account-widget>
+        </action-card>
+        <!-- End Family Contract -->
       </page-body>
       <page-panel id="resultPanel"></page-panel>
     `;
