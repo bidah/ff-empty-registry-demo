@@ -186,7 +186,7 @@ pub contract RegistryFamilyContract: RegistryInterface {
       pre {
         RegistryFamilyContract.templates[templateID] != nil : "Could not create collectible: template does not exist."
       }
-      let colletible = RegistryFamilyContract.templates[templateID]!
+      let collectible = RegistryFamilyContract.templates[templateID]!
       RegistryFamilyContract.totalCollectibles = RegistryFamilyContract.totalCollectibles + 1
       self.id = RegistryFamilyContract.totalCollectibles
       self.data = Template(templateID: templateID, dna: collectible.dna, name: collectible.name)
