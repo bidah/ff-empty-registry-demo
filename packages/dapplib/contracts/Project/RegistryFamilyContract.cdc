@@ -3,7 +3,7 @@ import RegistryService from Project.RegistryService
 import FungibleToken from Flow.FungibleToken
 
 
-pub contract RegistrySampleContract: RegistryInterface {
+pub contract RegistryFamilyContract: RegistryInterface {
 
   // Module related logic
   //
