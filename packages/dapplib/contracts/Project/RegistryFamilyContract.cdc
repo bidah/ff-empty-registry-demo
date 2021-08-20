@@ -2,7 +2,6 @@ import RegistryInterface from Project.RegistryInterface
 import RegistryService from Project.RegistryService
 import FungibleToken from Flow.FungibleToken
 
-
 pub contract RegistryFamilyContract: RegistryInterface {
 
   // Module related logic
@@ -67,6 +66,46 @@ pub contract RegistryFamilyContract: RegistryInterface {
   pub let CollectionStoragePath: StoragePath
   pub let CollectionPublicPath: PublicPath
   pub let AdminStoragePath: StoragePath
+
+    pub resource Admin {
+    pub fun createTemplate(dna: String, name: String): UInt32 {
+      pre {
+        dna.length > 0 : "Could not create template: dna is required."
+        name.length > 0 : "Could not create template: name is required."
+      }
+      let newCollectibleID = RegistryFamilyContract.nextTemplateID
+      RegistryFamilyContract.templates[newCollectibleID] = Template(templateID: newCollectibleID, dna: dna, name: name)
+      RegistryFamilyContract.nextTemplateID = RegistryFamilyContract.nextTemplateID + 1
+      return newCollectibleID
+    }
+
+    pub fun destroyTemplate(collectibleID: UInt32) {
+      pre {
+        RegistryFamilyContract.templates[collectibleID] != nil : "Could not delete template: template does not exist."
+      }
+      RegistryFamilyContract.templates.remove(key: collectibleID)
+    }
+
+    pub fun createFamily(name: String, price: UFix64) {
+      let newFamily <- create Family(name: name, price: price)
+      RegistryFamilyContract.families[newFamily.familyID] <-! newFamily
+    }
+
+    pub fun borrowFamily(familyID: UInt32): &Family {
+      pre {
+        RegistryFamilyContract.families[familyID] != nil : "Could not borrow family: family does not exist."
+      }
+      return &RegistryFamilyContract.families[familyID] as &Family
+    }
+
+    pub fun destroyFamily(familyID: UInt32) {
+      pre {
+        RegistryFamilyContract.families[familyID] != nil : "Could not borrow family: family does not exist."
+      }
+      let familyToDelete <- RegistryFamilyContract.families.remove(key: familyID)!
+      destroy familyToDelete
+    }
+  }
 
   pub struct Template {
     pub let templateID: UInt32
@@ -163,7 +202,7 @@ pub contract RegistryFamilyContract: RegistryInterface {
 
     let familyRef = &self.families[familyID] as! &Family
     if familyRef.price > paymentVault.balance {
-      panic("Could not batch mint dappy from family: payment balance is not sufficient.")
+      panic("Could not batch mint collectible from family: payment balance is not sufficient.")
     }
     let collection <- create Collection()
 
@@ -226,7 +265,6 @@ pub contract RegistryFamilyContract: RegistryInterface {
     let el = &self.families[familyID] as! &Family
     return el.templates.contains(templateID)
   }
-
  
   init() {
     // Initialize clientTenants
