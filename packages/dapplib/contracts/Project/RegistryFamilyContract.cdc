@@ -111,7 +111,7 @@ pub contract RegistryFamilyContract: RegistryInterface {
     pub fun listCollectibles(): {UInt64: Template} {
       var collectibleTemplates: {UInt64:Template} = {}
       for key in self.ownedCollectibles.keys {
-        let el = &self.ownedCollectibles[key] as &Dappy
+        let el = &self.ownedCollectibles[key] as &Collectible
         collectibleTemplates.insert(key: el.id, el.data)
       }
       return collectibleTemplates
