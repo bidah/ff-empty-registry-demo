@@ -94,7 +94,6 @@ pub contract RegistrySampleContract: RegistryInterface {
       self.price = price
       self.familyID = RegistryFamilyContract.nextFamilyID
       self.templates = []
-      self.lazy = {}
       RegistryFamilyContract.nextFamilyID = RegistryFamilyContract.nextFamilyID + 1
     }
 
