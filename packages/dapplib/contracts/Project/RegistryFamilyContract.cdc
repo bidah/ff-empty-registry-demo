@@ -224,7 +224,6 @@ pub contract RegistryFamilyContract: RegistryInterface {
         name: el.name, 
         familyID: el.familyID, 
         templates: el.templates, 
-        lazy: el.lazy, 
         price: el.price
       ))
     }
@@ -252,7 +251,6 @@ pub contract RegistryFamilyContract: RegistryInterface {
       name: el.name, 
       familyID: el.familyID, 
       templates: el.templates, 
-      lazy: el.lazy, 
       price: el.price
     )
     return report
