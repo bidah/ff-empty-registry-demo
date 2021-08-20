@@ -115,6 +115,29 @@ pub contract RegistrySampleContract: RegistryInterface {
       self.data = Template(templateID: templateID, dna: collectible.dna, name: collectible.name)
     }
   }
+
+  pub fun batchMintCollectibleFromFamily(familyID: UInt32, templateIDs: [UInt32], paymentVault: @FungibleToken.Vault): @Collection {
+    pre {
+      templateIDs.length > 0 : "Could not batch mint collectible from family: at least one templateID is required."
+      templateIDs.length <= 5 : "Could not batch mint collectible from family: batch mint limit of 5 collectible exceeded."
+      self.families[familyID] != nil : "Could not batch mint collectible from family: family does not exist."
+    }
+
+    let familyRef = &self.families[familyID] as! &Family
+    if familyRef.price > paymentVault.balance {
+      panic("Could not batch mint dappy from family: payment balance is not sufficient.")
+    }
+    let collection <- create Collection()
+
+    for ID in templateIDs {
+      if !self.familyContainsTemplate(familyID: familyID, templateID: ID) {
+        continue
+      }
+      collection.deposit(token: <- create Dappy(templateID: ID))
+    }
+    destroy paymentVault
+    return <-collection
+  }
  
     init() {
         // Initialize clientTenants
