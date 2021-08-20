@@ -87,6 +87,20 @@ pub contract RegistrySampleContract: RegistryInterface {
     }
   }
 
+  pub struct FamilyReport {
+    pub let name: String
+    pub let familyID: UInt32
+    pub var templates: [UInt32]
+    pub var price: UFix64
+    
+    init(name: String, familyID: UInt32, templates: [UInt32], price: UFix64) {
+      self.name = name
+      self.familyID = familyID
+      self.templates = []
+      self.price = price
+    }
+  }
+
   pub resource Collectible {
     pub let id: UInt64
     pub let data: Template
