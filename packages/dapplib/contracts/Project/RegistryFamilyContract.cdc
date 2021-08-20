@@ -1,5 +1,7 @@
 import RegistryInterface from Project.RegistryInterface
 import RegistryService from Project.RegistryService
+import FungibleToken from Flow.FungibleToken
+
 
 pub contract RegistrySampleContract: RegistryInterface {
 
@@ -47,11 +49,35 @@ pub contract RegistrySampleContract: RegistryInterface {
     pub let TenantStoragePath: StoragePath
     pub let TenantPublicPath: PublicPath
 
-    ////////////////////////////////////////////////////////////////////////
-    //
-    // IDEA
-    // The idea is to implement a packs module based on crypto dappies implementation
-    // https://github.com/bebner/crypto-dappy/blob/master/cadence/contracts/DappyContract.cdc
+  ////////////////////////////////////////////////////////////////////////
+  //
+  // IDEA
+  // The idea is to implement a packs module based on crypto dappies implementation
+  // https://github.com/bebner/crypto-dappy/blob/master/cadence/contracts/DappyContract.cdc
+
+    pub struct Template {
+    pub let templateID: UInt32
+    pub let dna: String
+    pub let name: String
+    pub let price: UFix64
+
+    init(templateID: UInt32, dna: String, name: String) {
+      self.templateID = templateID
+      self.dna = dna
+      self.name = name
+      self.price = self._calculatePrice(dna: dna.length)
+    }
+
+    access(self) fun _calculatePrice(dna: Int): UFix64 {
+      if dna >= 31 {
+        return 21.0
+      } else if dna >= 25 {
+        return 14.0
+      } else {
+        return 7.0
+      }
+    }
+  }
 
   pub resource Family {
     pub let name: String
