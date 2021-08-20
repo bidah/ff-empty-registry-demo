@@ -67,6 +67,65 @@ pub contract RegistryFamilyContract: RegistryInterface {
   pub let CollectionPublicPath: PublicPath
   pub let AdminStoragePath: StoragePath
 
+  pub resource interface CollectionPublic {
+    pub fun deposit(token: @Collectible)
+    pub fun getIDs(): [UInt64]
+    pub fun listCollectibles(): {UInt64: Template}
+  }
+
+  pub resource interface Provider {
+    pub fun withdraw(withdrawID: UInt64): @Collectible
+  }
+
+  pub resource interface Receiver{
+    pub fun deposit(token: @Collectible)
+    pub fun batchDeposit(collection: @Collection)
+  }
+
+  pub resource Collection: CollectionPublic, Provider, Receiver {
+    pub var ownedCollectibles: @{UInt64: Collectible}
+
+    pub fun withdraw(withdrawID: UInt64): @Collectible {
+      let token <- self.ownedCollectibles.remove(key: withdrawID) 
+        ?? panic("Could not withdraw collectible: collectible does not exist in collection")
+      return <-token
+    }
+
+    pub fun deposit(token: @Collectible) {
+      let oldToken <- self.ownedCollectibles[token.id] <- token
+      destroy oldToken
+    }
+
+    pub fun batchDeposit(collection: @Collection) {
+      let keys = collection.getIDs()
+      for key in keys {
+        self.deposit(token: <-collection.withdraw(withdrawID: key))
+      }
+      destroy collection
+    }
+
+    pub fun getIDs(): [UInt64] {
+      return self.ownedCollectibles.keys
+    }
+
+    pub fun listCollectibles(): {UInt64: Template} {
+      var collectibleTemplates: {UInt64:Template} = {}
+      for key in self.ownedCollectibles.keys {
+        let el = &self.ownedCollectibles[key] as &Dappy
+        collectibleTemplates.insert(key: el.id, el.data)
+      }
+      return collectibleTemplates
+    }
+
+    destroy() {
+      destroy self.ownedCollectibles
+    }
+
+    init() {
+      self.ownedCollectibles<- {}
+    }
+  }
+
     pub resource Admin {
     pub fun createTemplate(dna: String, name: String): UInt32 {
       pre {
