@@ -3,6 +3,12 @@
 The idea is to implement a module for creating and minting packs of NFTs.
 Will be based on logic from CryptoDappies <https://github.com/bebner/crypto-dappy/blob/master/cadence/contracts/DappyContract.cdc>
 
+# TODO
+
+**Roadmap:** Will build the contract and cards without composability. With that working turn into composable contract.
+
+-[x] first draft of dappy contract extracting the packs (family) funcitonality -[x] action card: create collection for families -[ ] action card: check if we have a collection
+
 # KNOWN ERRORS For Windows Users
 
 A few windows participants have struggled with a `throw Missing contract address for ${contractRef}. Perhaps it wasn't deployed?` error upon running yarn start. Thanks to KR, a participant in the bootcamp, we have discovered the issue is with the /packages/dapplib/src/rythm.js file. If you make the following changes to that file, it should work...
