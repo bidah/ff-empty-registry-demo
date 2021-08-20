@@ -61,7 +61,7 @@ pub contract RegistryFamilyContract: RegistryInterface {
 
   pub var nextTemplateID: UInt32
   pub var nextFamilyID: UInt32
-  pub var totalDappies: UInt64
+  pub var totalCollectibles: UInt64
   
   pub let CollectionStoragePath: StoragePath
   pub let CollectionPublicPath: PublicPath
