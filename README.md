@@ -8,7 +8,8 @@ Will be based on logic from CryptoDappies <https://github.com/bebner/crypto-dapp
 **Roadmap:** Will build the contract and cards without composability. With that working turn into composable contract.
 
 - [x] first draft of dappy contract extracting the packs (family) funcitonality
-- [x] action card: create collection for families -[ ] action card: check if we have a collection
+- [x] action card: create collection for families
+- [ ] action card: check if we have a collection
 
 # KNOWN ERRORS For Windows Users
 
