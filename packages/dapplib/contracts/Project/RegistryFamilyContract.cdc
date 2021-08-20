@@ -55,7 +55,7 @@ pub contract RegistrySampleContract: RegistryInterface {
   // The idea is to implement a packs module based on crypto dappies implementation
   // https://github.com/bebner/crypto-dappy/blob/master/cadence/contracts/DappyContract.cdc
 
-    pub struct Template {
+  pub struct Template {
     pub let templateID: UInt32
     pub let dna: String
     pub let name: String
@@ -137,7 +137,7 @@ pub contract RegistrySampleContract: RegistryInterface {
       }
       let colletible = RegistryFamilyContract.templates[templateID]!
       RegistryFamilyContract.totalCollectibles = RegistryFamilyContract.totalCollectibles + 1
-      self.id = DappyContract.totalCollectibles
+      self.id = RegistryFamilyContract.totalCollectibles
       self.data = Template(templateID: templateID, dna: collectible.dna, name: collectible.name)
     }
   }
@@ -164,13 +164,76 @@ pub contract RegistrySampleContract: RegistryInterface {
     destroy paymentVault
     return <-collection
   }
- 
-    init() {
-        // Initialize clientTenants
-        self.clientTenants = {}
 
-        // Set Named paths
-        self.TenantStoragePath = /storage/RegistrySampleContractTenant
-        self.TenantPublicPath = /public/RegistrySampleContractTenant
+  pub fun listFamilies(): [FamilyReport] {
+    var families: [FamilyReport] = []
+    for key in self.families.keys {
+      let el = &self.families[key] as &Family
+      families.append(FamilyReport(
+        name: el.name, 
+        familyID: el.familyID, 
+        templates: el.templates, 
+        lazy: el.lazy, 
+        price: el.price
+      ))
     }
+    return families
+  }
+
+  pub fun listFamilyTemplates(familyID: UInt32): [UInt32] {
+    pre {
+      self.families[familyID] != nil : "Could not list family templates: family does not exist."
+    }
+    var report: [UInt32] = []
+    let el = &self.families[familyID] as! &Family
+    for temp in el.templates {
+      report.append(temp)
+    }
+    return report
+  }
+
+  pub fun getFamily(familyID: UInt32): FamilyReport {
+    pre {
+      self.families[familyID] != nil : "Could not get family: family does not exist."
+    }
+    let el = &self.families[familyID] as! &Family
+    let report = FamilyReport(
+      name: el.name, 
+      familyID: el.familyID, 
+      templates: el.templates, 
+      lazy: el.lazy, 
+      price: el.price
+    )
+    return report
+  }
+
+  pub fun familyContainsTemplate(familyID: UInt32, templateID: UInt32): Bool {
+    pre {
+      self.families[familyID] != nil : "Family does not exist"
+    }
+    let el = &self.families[familyID] as! &Family
+    return el.templates.contains(templateID)
+  }
+
+ 
+  init() {
+    // Initialize clientTenants
+    self.clientTenants = {}
+
+    // Set Named paths
+    self.TenantStoragePath = /storage/RegistrySampleContractTenant
+    self.TenantPublicPath = /public/RegistrySampleContractTenant
+
+    /////////////////////////
+
+    self.templates = {}
+    self.totalCollectibles = 0
+    self.nextTemplateID = 1
+    self.nextFamilyID = 1
+    self.CollectionStoragePath = /storage/CollectibleCollection
+    self.CollectionPublicPath = /public/CollectibleCollectionPublic
+    self.AdminStoragePath = /storage/CollectibleAdmin
+    self.account.save<@Admin>(<- create Admin(), to: self.AdminStoragePath)
+    self.families <- {}
+  }
 }
