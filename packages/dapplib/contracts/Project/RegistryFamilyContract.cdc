@@ -66,26 +66,39 @@ pub contract RegistrySampleContract: RegistryInterface {
       }
       self.name = name
       self.price = price
-      self.familyID = DappyContract.nextFamilyID
+      self.familyID = RegistryFamilyContract.nextFamilyID
       self.templates = []
       self.lazy = {}
-      DappyContract.nextFamilyID = DappyContract.nextFamilyID + 1
+      RegistryFamilyContract.nextFamilyID = RegistryFamilyContract.nextFamilyID + 1
     }
 
     pub fun addTemplate(templateID: UInt32) {
       pre {
-        DappyContract.templates[templateID] != nil : "Could not add dappy to pack: template does not exist."
+        RegistryFamilyContract.templates[templateID] != nil : "Could not add dappy to pack: template does not exist."
       }
       self.templates.append(templateID)
-      self.lazy[templateID] = false
     }
 
-    pub fun mintDappy(templateID: UInt32): @Dappy {
+    pub fun mintCollectible(templateID: UInt32): @Dappy {
       pre {
-        self.templates.contains(templateID): "Could not mint dappy: template does not exist."
-        !self.lazy[templateID]!: "Could not mint Dappy: template has been retired."
+        self.templates.contains(templateID): "Could not mint collectible: template does not exist."
       }
-      return <- create Dappy(templateID: templateID)
+      return <- create Collectible(templateID: templateID)
+    }
+  }
+
+  pub resource Collectible {
+    pub let id: UInt64
+    pub let data: Template
+
+    init(templateID: UInt32) {
+      pre {
+        RegistryFamilyContract.templates[templateID] != nil : "Could not create collectible: template does not exist."
+      }
+      let colletible = RegistryFamilyContract.templates[templateID]!
+      RegistryFamilyContract.totalCollectibles = RegistryFamilyContract.totalCollectibles + 1
+      self.id = DappyContract.totalCollectibles
+      self.data = Template(templateID: templateID, dna: collectible.dna, name: collectible.name)
     }
   }
  
