@@ -4,50 +4,60 @@ import FungibleToken from Flow.FungibleToken
 
 
 pub contract RegistrySampleContract: RegistryInterface {
+  access(self) var templates: {UInt32: Template}
+  access(self) var families: @{UInt32: Family}
 
-    // Maps an address (of the customer/DappContract) to the amount
-    // of tenants they have for a specific RegistryContract.
-    access(contract) var clientTenants: {Address: UInt64}
-   
-    // Tenant
-    //
-    // Requirement that all conforming multitenant smart contracts have
-    // to define a resource called Tenant to store all data and things
-    // that would normally be saved to account storage in the contract's
-    // init() function
-    // 
-    pub resource Tenant {
+  pub var nextTemplateID: UInt32
+  pub var nextFamilyID: UInt32
+  pub var totalDappies: UInt64
+  
+  pub let CollectionStoragePath: StoragePath
+  pub let CollectionPublicPath: PublicPath
+  pub let AdminStoragePath: StoragePath
 
-        init() {
-    
-        }
-    }
+  // Maps an address (of the customer/DappContract) to the amount
+  // of tenants they have for a specific RegistryContract.
+  access(contract) var clientTenants: {Address: UInt64}
+  
+  // Tenant
+  //
+  // Requirement that all conforming multitenant smart contracts have
+  // to define a resource called Tenant to store all data and things
+  // that would normally be saved to account storage in the contract's
+  // init() function
+  // 
+  pub resource Tenant {
 
-    // instance
-    // instance returns an Tenant resource.
-    //
-    pub fun instance(authNFT: &RegistryService.AuthNFT): @Tenant {
-        let clientTenant = authNFT.owner!.address
-        if let count = self.clientTenants[clientTenant] {
-            self.clientTenants[clientTenant] = self.clientTenants[clientTenant]! + (1 as UInt64)
-        } else {
-            self.clientTenants[clientTenant] = (1 as UInt64)
-        }
+      init() {
+  
+      }
+  }
 
-        return <-create Tenant()
-    }
+  // instance
+  // instance returns an Tenant resource.
+  //
+  pub fun instance(authNFT: &RegistryService.AuthNFT): @Tenant {
+      let clientTenant = authNFT.owner!.address
+      if let count = self.clientTenants[clientTenant] {
+          self.clientTenants[clientTenant] = self.clientTenants[clientTenant]! + (1 as UInt64)
+      } else {
+          self.clientTenants[clientTenant] = (1 as UInt64)
+      }
 
-    // getTenants
-    // getTenants returns clientTenants.
-    //
-    pub fun getTenants(): {Address: UInt64} {
-        return self.clientTenants
-    }
+      return <-create Tenant()
+  }
 
-    // Named Paths
-    //
-    pub let TenantStoragePath: StoragePath
-    pub let TenantPublicPath: PublicPath
+  // getTenants
+  // getTenants returns clientTenants.
+  //
+  pub fun getTenants(): {Address: UInt64} {
+      return self.clientTenants
+  }
+
+  // Named Paths
+  //
+  pub let TenantStoragePath: StoragePath
+  pub let TenantPublicPath: PublicPath
 
   ////////////////////////////////////////////////////////////////////////
   //
