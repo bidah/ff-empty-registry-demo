@@ -11,8 +11,9 @@ Will be based on logic from CryptoDappies <https://github.com/bebner/crypto-dapp
 - [x] action card: create collection for families
 - [ ] action card: check if we have a collection
 - [ ] action card: get family
-- [ ] action card: list collectibles in family (pack)
+- [ ] action card: list collectibles in family
 - [ ] action card: list collectible templates
+- [ ] action card: mint collectibles from family
 
 # KNOWN ERRORS For Windows Users
 
