@@ -100,12 +100,12 @@ pub contract RegistrySampleContract: RegistryInterface {
 
     pub fun addTemplate(templateID: UInt32) {
       pre {
-        RegistryFamilyContract.templates[templateID] != nil : "Could not add dappy to pack: template does not exist."
+        RegistryFamilyContract.templates[templateID] != nil : "Could not add collectible to pack: template does not exist."
       }
       self.templates.append(templateID)
     }
 
-    pub fun mintCollectible(templateID: UInt32): @Dappy {
+    pub fun mintCollectible(templateID: UInt32): @Collectible {
       pre {
         self.templates.contains(templateID): "Could not mint collectible: template does not exist."
       }
@@ -159,7 +159,7 @@ pub contract RegistrySampleContract: RegistryInterface {
       if !self.familyContainsTemplate(familyID: familyID, templateID: ID) {
         continue
       }
-      collection.deposit(token: <- create Dappy(templateID: ID))
+      collection.deposit(token: <- create Collectible(templateID: ID))
     }
     destroy paymentVault
     return <-collection
