@@ -67,6 +67,10 @@ pub contract RegistryFamilyContract: RegistryInterface {
   pub let CollectionPublicPath: PublicPath
   pub let AdminStoragePath: StoragePath
 
+    pub fun createEmptyCollection(): @Collection {
+    return <-create self.Collection()
+  }
+
   pub resource interface CollectionPublic {
     pub fun deposit(token: @Collectible)
     pub fun getIDs(): [UInt64]
