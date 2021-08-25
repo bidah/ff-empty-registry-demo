@@ -13,6 +13,7 @@ Will be based on logic from CryptoDappies <https://github.com/bebner/crypto-dapp
 - [x] action card: create family
 - [x] action card: get family
 - [x] action card: create template
+- [x] action card: add template to family
 - [ ] action card: list collectibles in family
 - [ ] action card: list collectible templates
 - [ ] action card: mint collectibles from family

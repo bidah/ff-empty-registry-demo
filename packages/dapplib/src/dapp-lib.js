@@ -105,6 +105,25 @@ module.exports = class DappLib {
       result: result.callData.transactionId,
     };
   }
+
+  static async addTemplateToFamily(data) {
+    const config = DappLib.getConfig();
+
+    const result = await Blockchain.post(
+      { config, roles: { proposer: data.account } },
+      "add_template_to_family",
+      {
+        familyID: { value: parseInt(data.familyID), type: t.UInt32 },
+        templateID: { value: parseInt(data.templateID), type: t.UInt32 },
+      }
+    );
+
+    return {
+      type: DappLib.DAPP_RESULT_TX_HASH,
+      label: "Transaction Hash",
+      result: result.callData.transactionId,
+    };
+  }
   /********** FLOW TOKEN **********/
 
   static async getBalance(data) {
