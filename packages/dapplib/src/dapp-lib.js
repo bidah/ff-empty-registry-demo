@@ -14,7 +14,7 @@ module.exports = class DappLib {
       {
         config: DappLib.getConfig(),
         roles: {
-          proposer: data.signer,
+          proposer: data.account,
         },
       },
       "create_family_collection"
