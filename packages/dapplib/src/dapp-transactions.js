@@ -7,6 +7,26 @@ const fcl = require("@onflow/fcl");
 
 module.exports = class DappTransactions {
 
+	static create_family() {
+		return fcl.transaction`
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				
+				transaction(name: String, price: UFix64) {
+				
+				  var adminRef: &RegistryFamilyContract.Admin
+				
+				  prepare(acct: AuthAccount) {
+				    self.adminRef = acct.borrow<&RegistryFamilyContract.Admin>(from: RegistryFamilyContract.AdminStoragePath) ?? panic("Cannot borrow admin ref")
+				  }
+				
+				  execute {
+				    self.adminRef.createFamily(name: name, price: price)
+				  }
+				}
+				 
+		`;
+	}
+
 	static create_family_collection() {
 		return fcl.transaction`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450

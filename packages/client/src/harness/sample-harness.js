@@ -126,6 +126,18 @@ export default class SampleHarness extends LitElement {
         >
           <text-widget field="familyID" label="Family ID"></text-widget>
         </action-card>
+
+        <action-card
+          title="Create Family"
+          description="creates a family resource"
+          action="createFamily"
+          method="post"
+          fields="name price account"
+        >
+          <account-widget field="account" label="Account"> </account-widget>
+          <text-widget field="name" label="Name"></text-widget>
+          <text-widget field="price" label="Price"> </text-widget>
+        </action-card>
         <!-- End Family Contract -->
       </page-body>
       <page-panel id="resultPanel"></page-panel>

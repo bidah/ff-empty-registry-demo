@@ -60,8 +60,30 @@ module.exports = class DappLib {
 
     return {
       type: DappLib.DAPP_RESULT_BOOLEAN,
-      label: "Transaction Hash",
+      label: "getFamily:",
       result: result.callData,
+    };
+  }
+
+  static async createFamily(data) {
+    let result = await Blockchain.post(
+      {
+        config: DappLib.getConfig(),
+        roles: {
+          proposer: data.account,
+        },
+      },
+      "create_family",
+      {
+        name: { value: data.name, type: t.String },
+        price: { value: data.price, type: t.UFix64 },
+      }
+    );
+
+    return {
+      type: DappLib.DAPP_RESULT_TX_HASH,
+      label: "Transaction Hash",
+      result: result.callData.transactionId,
     };
   }
   /********** FLOW TOKEN **********/
