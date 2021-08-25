@@ -273,8 +273,10 @@ pub contract RegistryFamilyContract: RegistryInterface {
       if !self.familyContainsTemplate(familyID: familyID, templateID: ID) {
         continue
       }
+      log("depositing collectible to collection")
       collection.deposit(token: <- create Collectible(templateID: ID))
     }
+      log("done depositing")
     destroy paymentVault
     return <-collection
   }

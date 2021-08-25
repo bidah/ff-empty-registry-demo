@@ -18,6 +18,17 @@ module.exports = class DappScripts {
 		`;
 	}
 
+	static list_templates_of_family() {
+		return fcl.script`
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				
+				pub fun main(familyID: UInt32): [UInt32] {
+				  let templates = RegistryFamilyContract.listFamilyTemplates(familyID: familyID)
+				  return templates
+				}
+		`;
+	}
+
 	static get_family() {
 		return fcl.script`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
@@ -27,23 +38,6 @@ module.exports = class DappScripts {
 				  return family
 				}
 				
-		`;
-	}
-
-	static flowtoken_get_balance() {
-		return fcl.script`
-				import FungibleToken from 0x01cf0e2f2f715450
-				import FlowToken from 0x0ae53cb6e3f42a79
-				
-				pub fun main(account: Address): UFix64 {
-				
-				    let vaultRef = getAccount(account)
-				        .getCapability(/public/flowTokenBalance)
-				        .borrow<&FlowToken.Vault{FungibleToken.Balance}>()
-				        ?? panic("Could not borrow Balance reference to the Vault")
-				
-				    return vaultRef.balance
-				}  
 		`;
 	}
 
@@ -63,6 +57,23 @@ module.exports = class DappScripts {
 				        return true
 				    }
 				}
+		`;
+	}
+
+	static flowtoken_get_balance() {
+		return fcl.script`
+				import FungibleToken from 0x01cf0e2f2f715450
+				import FlowToken from 0x0ae53cb6e3f42a79
+				
+				pub fun main(account: Address): UFix64 {
+				
+				    let vaultRef = getAccount(account)
+				        .getCapability(/public/flowTokenBalance)
+				        .borrow<&FlowToken.Vault{FungibleToken.Balance}>()
+				        ?? panic("Could not borrow Balance reference to the Vault")
+				
+				    return vaultRef.balance
+				}  
 		`;
 	}
 

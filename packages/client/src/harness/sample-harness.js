@@ -162,6 +162,34 @@ export default class SampleHarness extends LitElement {
           <text-widget field="familyID" label="Family ID: "></text-widget>
           <text-widget field="templateID" label="Template ID: "></text-widget>
         </action-card>
+
+        <action-card
+          title="List Templates Of Family"
+          description="list template IDs of family"
+          action="listTemplatesOfFamily"
+          method="get"
+          fields="familyID account"
+        >
+          <account-widget field="account" label="Account"> </account-widget>
+          <text-widget field="familyID" label="Family ID: "></text-widget>
+        </action-card>
+
+        <action-card
+          title="Batch Mint Collectible From Family"
+          description="mints collectibles from a Family"
+          action="batchMintCollectibleFromFamily"
+          method="post"
+          fields="familyID templateIDs amount account"
+        >
+          <account-widget field="account" label="Account"> </account-widget>
+          <text-widget field="familyID" label="Family ID: "></text-widget>
+          <text-widget
+            field="templateIDs"
+            label="Template ID: "
+            placeholder="e.g 1 2 3"
+          ></text-widget>
+          <text-widget field="amount" label="Amount: "></text-widget>
+        </action-card>
         <!-- End Family Contract -->
       </page-body>
       <page-panel id="resultPanel"></page-panel>

@@ -124,6 +124,48 @@ module.exports = class DappLib {
       result: result.callData.transactionId,
     };
   }
+
+  static async listTemplatesOfFamily(data) {
+    let result = await Blockchain.get(
+      {
+        config: DappLib.getConfig(),
+        roles: {},
+      },
+      "list_templates_of_family",
+      {
+        acct: { value: parseInt(data.familyID), type: t.UInt32 },
+      }
+    );
+
+    return {
+      type: DappLib.DAPP_RESULT_ARRAY,
+      label: "listTemplatesOfFamily: ",
+      result: result.callData,
+    };
+  }
+
+  static async batchMintCollectibleFromFamily(data) {
+    let result = await Blockchain.post(
+      {
+        config: DappLib.getConfig(),
+        roles: {
+          proposer: data.account,
+        },
+      },
+      "batch_mint_collectible_from_family",
+      {
+        familyID: { value: parseInt(data.familyID), type: t.UInt32 },
+        templateIDs: { value: [1, 2], type: t.Array(t.UInt32) },
+        amount: { value: "1.0", type: t.UFix64 },
+      }
+    );
+
+    return {
+      type: DappLib.DAPP_RESULT_ARRAY,
+      label: "listTemplatesOfFamily: ",
+      result: result.callData,
+    };
+  }
   /********** FLOW TOKEN **********/
 
   static async getBalance(data) {

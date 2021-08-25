@@ -28,23 +28,28 @@ module.exports = class DappTransactions {
 		`;
 	}
 
-	static create_template() {
+	static batch_mint_collectible_from_family() {
 		return fcl.transaction`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				import FungibleToken from 0x01cf0e2f2f715450
+				import FlowToken from 0x0ae53cb6e3f42a79
 				
-				transaction(dna: String, name: String) {
-				
-				  var adminRef: &RegistryFamilyContract.Admin
+				transaction(familyID: UInt32, templateIDs: [UInt32], amount: UFix64 ) {
+				  let receiverReference: &RegistryFamilyContract.Collection{RegistryFamilyContract.Receiver}
+				  let sentVault: @FungibleToken.Vault
 				
 				  prepare(acct: AuthAccount) {
-				    self.adminRef = acct.borrow<&RegistryFamilyContract.Admin>(from: RegistryFamilyContract.AdminStoragePath) ?? panic("Cannot borrow admin ref")
+				    self.receiverReference = acct.borrow<&RegistryFamilyContract.Collection>(from: RegistryFamilyContract.CollectionStoragePath) 
+				        ?? panic("Cannot borrow receiverReference")
+				    let vaultRef = acct.borrow<&FlowToken.Vault>(from: /storage/flowTokenVault) ?? panic("Could not borrow Flow vault")
+				    self.sentVault <- vaultRef.withdraw(amount: amount) as! @FungibleToken.Vault
 				  }
 				
 				  execute {
-				    self.adminRef.createTemplate(dna: dna, name: name)
+				    let collection <- RegistryFamilyContract.batchMintCollectibleFromFamily(familyID: familyID, templateIDs: templateIDs, paymentVault: <-self.sentVault)
+				    self.receiverReference.batchDeposit(collection: <-collection)
 				  }
 				}
-				 
 		`;
 	}
 
@@ -82,6 +87,26 @@ module.exports = class DappTransactions {
 				
 				  execute {
 				    self.adminRef.createFamily(name: name, price: price)
+				  }
+				}
+				 
+		`;
+	}
+
+	static create_template() {
+		return fcl.transaction`
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				
+				transaction(dna: String, name: String) {
+				
+				  var adminRef: &RegistryFamilyContract.Admin
+				
+				  prepare(acct: AuthAccount) {
+				    self.adminRef = acct.borrow<&RegistryFamilyContract.Admin>(from: RegistryFamilyContract.AdminStoragePath) ?? panic("Cannot borrow admin ref")
+				  }
+				
+				  execute {
+				    self.adminRef.createTemplate(dna: dna, name: name)
 				  }
 				}
 				 
