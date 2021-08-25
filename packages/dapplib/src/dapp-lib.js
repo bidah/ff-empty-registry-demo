@@ -46,6 +46,24 @@ module.exports = class DappLib {
     };
   }
 
+  static async getFamily(data) {
+    let result = await Blockchain.get(
+      {
+        config: DappLib.getConfig(),
+        roles: {},
+      },
+      "get_family",
+      {
+        acct: { value: parseInt(data.familyID), type: t.UInt32 },
+      }
+    );
+
+    return {
+      type: DappLib.DAPP_RESULT_BOOLEAN,
+      label: "Transaction Hash",
+      result: result.callData,
+    };
+  }
   /********** FLOW TOKEN **********/
 
   static async getBalance(data) {

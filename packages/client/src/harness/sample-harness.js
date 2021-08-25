@@ -116,6 +116,16 @@ export default class SampleHarness extends LitElement {
         >
           <account-widget field="account" label="Account"> </account-widget>
         </action-card>
+
+        <action-card
+          title="Get Family"
+          description="Gets back the FamilyReport struct"
+          action="getFamily"
+          method="get"
+          fields="familyID"
+        >
+          <text-widget field="familyID" label="Family ID"></text-widget>
+        </action-card>
         <!-- End Family Contract -->
       </page-body>
       <page-panel id="resultPanel"></page-panel>
