@@ -98,10 +98,20 @@ export default class SampleHarness extends LitElement {
         </div>
         <!-- Start Family Contract -->
         <action-card
-          title="create family collection"
+          title="Create Family Collection"
           description="create a family collection for families (packs)"
           action="createFamilyCollection"
           method="post"
+          fields="account"
+        >
+          <account-widget field="account" label="Account"> </account-widget>
+        </action-card>
+
+        <action-card
+          title="Check Collection"
+          description="check if we have a collection"
+          action="checkCollection"
+          method="get"
           fields="account"
         >
           <account-widget field="account" label="Account"> </account-widget>

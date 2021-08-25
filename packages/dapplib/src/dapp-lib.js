@@ -27,6 +27,25 @@ module.exports = class DappLib {
     };
   }
 
+  static async checkCollection(data) {
+    let result = await Blockchain.get(
+      {
+        config: DappLib.getConfig(),
+        roles: {},
+      },
+      "check_collection",
+      {
+        acct: { value: data.account, type: t.Address },
+      }
+    );
+
+    return {
+      type: DappLib.DAPP_RESULT_BOOLEAN,
+      label: "Transaction Hash",
+      result: result.callData,
+    };
+  }
+
   /********** FLOW TOKEN **********/
 
   static async getBalance(data) {
