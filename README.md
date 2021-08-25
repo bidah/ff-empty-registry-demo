@@ -10,8 +10,9 @@ Will be based on logic from CryptoDappies <https://github.com/bebner/crypto-dapp
 - [x] first draft of dappy contract extracting the packs (family) funcitonality
 - [x] action card: create collection for families
 - [x] action card: check if we have a collection
-- [ ] action card: create family
+- [x] action card: create family
 - [x] action card: get family
+- [x] action card: create template
 - [ ] action card: list collectibles in family
 - [ ] action card: list collectible templates
 - [ ] action card: mint collectibles from family

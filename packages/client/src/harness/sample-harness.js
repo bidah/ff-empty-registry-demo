@@ -138,6 +138,18 @@ export default class SampleHarness extends LitElement {
           <text-widget field="name" label="Name"></text-widget>
           <text-widget field="price" label="Price"> </text-widget>
         </action-card>
+
+        <action-card
+          title="Create Template"
+          description="creates template struct and returns collectible ID"
+          action="createTemplate"
+          method="post"
+          fields="name dna account"
+        >
+          <account-widget field="account" label="Account"> </account-widget>
+          <text-widget field="name" label="Name"></text-widget>
+          <text-widget field="dna" label="DNA string"></text-widget>
+        </action-card>
         <!-- End Family Contract -->
       </page-body>
       <page-panel id="resultPanel"></page-panel>

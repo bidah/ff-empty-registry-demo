@@ -86,6 +86,25 @@ module.exports = class DappLib {
       result: result.callData.transactionId,
     };
   }
+
+  static async createTemplate(data) {
+    const config = DappLib.getConfig();
+
+    const result = await Blockchain.post(
+      { config, roles: { proposer: data.account } },
+      "create_template",
+      {
+        dna: { value: data.dna, type: t.String },
+        name: { value: data.name, type: t.String },
+      }
+    );
+
+    return {
+      type: DappLib.DAPP_RESULT_TX_HASH,
+      label: "Transaction Hash",
+      result: result.callData.transactionId,
+    };
+  }
   /********** FLOW TOKEN **********/
 
   static async getBalance(data) {

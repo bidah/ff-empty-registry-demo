@@ -47,6 +47,26 @@ module.exports = class DappTransactions {
 		`;
 	}
 
+	static create_template() {
+		return fcl.transaction`
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				
+				transaction(dna: String, name: String) {
+				
+				  var adminRef: &RegistryFamilyContract.Admin
+				
+				  prepare(acct: AuthAccount) {
+				    self.adminRef = acct.borrow<&RegistryFamilyContract.Admin>(from: RegistryFamilyContract.AdminStoragePath) ?? panic("Cannot borrow admin ref")
+				  }
+				
+				  execute {
+				    self.adminRef.createTemplate(dna: dna, name: name)
+				  }
+				}
+				 
+		`;
+	}
+
 	static registry_receive_auth_nft() {
 		return fcl.transaction`
 				import RegistryService from 0x01cf0e2f2f715450
