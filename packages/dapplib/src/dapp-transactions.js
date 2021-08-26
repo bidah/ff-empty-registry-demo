@@ -28,26 +28,6 @@ module.exports = class DappTransactions {
 		`;
 	}
 
-	static create_family_collection() {
-		return fcl.transaction`
-				import RegistryFamilyContract from 0x01cf0e2f2f715450
-				import RegistryService from 0x01cf0e2f2f715450
-				  
-				  transaction {
-				    prepare(acct: AuthAccount) {
-				      let collection <- RegistryFamilyContract.createEmptyCollection()
-				      acct.save<@RegistryFamilyContract.Collection>(<-collection, to: RegistryFamilyContract.CollectionStoragePath)
-				      acct.link<&{RegistryFamilyContract.CollectionPublic}>(RegistryFamilyContract.CollectionPublicPath, target: RegistryFamilyContract.CollectionStoragePath)
-				    }
-				
-				    execute {
-				      log("created/saved/linked a new collection for families")
-				    }
-				  }
-				
-		`;
-	}
-
 	static batch_mint_collectible_from_family() {
 		return fcl.transaction`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
@@ -74,23 +54,23 @@ module.exports = class DappTransactions {
 		`;
 	}
 
-	static create_template() {
+	static create_family_collection() {
 		return fcl.transaction`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				import RegistryService from 0x01cf0e2f2f715450
+				  
+				  transaction {
+				    prepare(acct: AuthAccount) {
+				      let collection <- RegistryFamilyContract.createEmptyCollection()
+				      acct.save<@RegistryFamilyContract.Collection>(<-collection, to: RegistryFamilyContract.CollectionStoragePath)
+				      acct.link<&{RegistryFamilyContract.CollectionPublic}>(RegistryFamilyContract.CollectionPublicPath, target: RegistryFamilyContract.CollectionStoragePath)
+				    }
 				
-				transaction(dna: String, name: String) {
-				
-				  var adminRef: &RegistryFamilyContract.Admin
-				
-				  prepare(acct: AuthAccount) {
-				    self.adminRef = acct.borrow<&RegistryFamilyContract.Admin>(from: RegistryFamilyContract.AdminStoragePath) ?? panic("Cannot borrow admin ref")
+				    execute {
+				      log("created/saved/linked a new collection for families")
+				    }
 				  }
 				
-				  execute {
-				    self.adminRef.createTemplate(dna: dna, name: name)
-				  }
-				}
-				 
 		`;
 	}
 
@@ -108,6 +88,26 @@ module.exports = class DappTransactions {
 				
 				  execute {
 				    self.adminRef.createFamily(name: name, price: price)
+				  }
+				}
+				 
+		`;
+	}
+
+	static create_template() {
+		return fcl.transaction`
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				
+				transaction(dna: String, name: String) {
+				
+				  var adminRef: &RegistryFamilyContract.Admin
+				
+				  prepare(acct: AuthAccount) {
+				    self.adminRef = acct.borrow<&RegistryFamilyContract.Admin>(from: RegistryFamilyContract.AdminStoragePath) ?? panic("Cannot borrow admin ref")
+				  }
+				
+				  execute {
+				    self.adminRef.createTemplate(dna: dna, name: name)
 				  }
 				}
 				 
@@ -176,7 +176,7 @@ module.exports = class DappTransactions {
 				      // If you add resource interfaces that Tenant must implement, you can
 				      // add those here and then uncomment the line below.
 				      // 
-				      // signer.link<&RegistrySampleContract.Tenant>(RegistrySampleContract.TenantPublicPath, target: RegistrySampleContract.TenantStoragePath)
+				      signer.link<&RegistrySampleContract.Tenant>(RegistrySampleContract.TenantPublicPath, target: RegistrySampleContract.TenantStoragePath)
 				    }
 				  }
 				
