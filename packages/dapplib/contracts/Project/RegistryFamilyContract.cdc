@@ -23,14 +23,15 @@ pub contract RegistryFamilyContract: RegistryInterface {
     // access(self) var families: @{UInt32: Family}
     pub(set) var templates: {UInt32: Template}
     pub(set) var families: @{UInt32: Family}
+    pub let admin: @Admin 
 
     pub(set) var nextTemplateID: UInt32
     pub(set) var nextFamilyID: UInt32
     pub(set) var totalCollectibles: UInt64
     
-    pub(set) let CollectionStoragePath: StoragePath
-    pub(set) let CollectionPublicPath: PublicPath
-    pub(set) let AdminStoragePath: StoragePath
+    pub let CollectionStoragePath: StoragePath
+    pub let CollectionPublicPath: PublicPath
+    pub let AdminStoragePath: StoragePath
 
       init() {
         self.templates = {}
@@ -40,7 +41,7 @@ pub contract RegistryFamilyContract: RegistryInterface {
         self.CollectionStoragePath = /storage/CollectibleCollection
         self.CollectionPublicPath = /public/CollectibleCollectionPublic
         self.AdminStoragePath = /storage/CollectibleAdmin
-        self.account.save<@Admin>(<- create Admin(), to: self.AdminStoragePath)
+        self.admin <- create Admin()
         self.families <- {}
       }
   }
@@ -141,48 +142,44 @@ pub contract RegistryFamilyContract: RegistryInterface {
   }
 
   pub resource Admin {
-    pub let tenant: &Tenant
-    pub fun createTemplate(dna: String, name: String): UInt32 {
+    pub fun createTemplate(tenant: &Tenant, dna: String, name: String): UInt32 {
       pre {
         dna.length > 0 : "Could not create template: dna is required."
         name.length > 0 : "Could not create template: name is required."
       }
-      let newCollectibleID = self.tenant.nextTemplateID
-      self.tenant.templates[newCollectibleID] = Template(templateID: newCollectibleID, dna: dna, name: name)
-      self.tenant.nextTemplateID = self.tenant.nextTemplateID + 1
+      let newCollectibleID = tenant.nextTemplateID
+      tenant.templates[newCollectibleID] = Template(templateID: newCollectibleID, dna: dna, name: name)
+      tenant.nextTemplateID = tenant.nextTemplateID + 1
       return newCollectibleID
     }
 
-    pub fun destroyTemplate(collectibleID: UInt32) {
+    pub fun destroyTemplate(tenant: &Tenant, collectibleID: UInt32) {
       pre {
-        self.tenant.templates[collectibleID] != nil : "Could not delete template: template does not exist."
+        tenant.templates[collectibleID] != nil : "Could not delete template: template does not exist."
       }
-      self.tenant.templates.remove(key: collectibleID)
+      tenant.templates.remove(key: collectibleID)
     }
 
-    pub fun createFamily(name: String, price: UFix64) {
-      let newFamily <- create Family(name: name, price: price)
-      self.tenant.families[newFamily.familyID] <-! newFamily
+    pub fun createFamily(tenant: &Tenant, name: String, price: UFix64) {
+      let newFamily <- create Family(tenant: tenant, name: name, price: price)
+      tenant.families[newFamily.familyID] <-! newFamily
     }
 
-    pub fun borrowFamily(familyID: UInt32): &Family {
+    pub fun borrowFamily(tenant: &Tenant, familyID: UInt32): &Family {
       pre {
-        self.tenant.families[familyID] != nil : "Could not borrow family: family does not exist."
+        tenant.families[familyID] != nil : "Could not borrow family: family does not exist."
       }
-      return &self.tenant.families[familyID] as &Family
+      return &tenant.families[familyID] as &Family
     }
 
-    pub fun destroyFamily(familyID: UInt32) {
+    pub fun destroyFamily(tenant: &Tenant, familyID: UInt32) {
       pre {
-        self.tenant.families[familyID] != nil : "Could not borrow family: family does not exist."
+        tenant.families[familyID] != nil : "Could not borrow family: family does not exist."
       }
       let familyToDelete <- self.tenant.families.remove(key: familyID)!
       destroy familyToDelete
     }
 
-    init(_tenant: &Tenant) {
-      self.tenant = _tenant
-    }
   }
 
   pub struct Template {
