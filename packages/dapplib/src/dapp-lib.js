@@ -182,9 +182,9 @@ module.exports = class DappLib {
 
     console.log(result.callData);
     return {
-      type: DappLib.DAPP_RESULT_OBJECT,
+      type: DappLib.DAPP_RESULT_STRING,
       label: "listUserCollectibles: ",
-      result: result.callData,
+      result: JSON.stringify(result.callData, null, 2),
     };
   }
 
