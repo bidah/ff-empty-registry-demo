@@ -7,15 +7,14 @@ transaction(familyID: UInt32, templateIDs: [UInt32], amount: UFix64 ) {
   let sentVault: @FungibleToken.Vault
 
   prepare(acct: AuthAccount) {
-    self.receiverReference = acct.borrow<&RegistryFamilyContract.Collection>(from: RegistryFamilyContract.CollectionStoragePath) 
+    self.receiverReference = acct.borrow<&RegistryFamilyContract.Collection>(from: RegistryFamilyContract.CollectionStoragePath)
         ?? panic("Cannot borrow receiverReference")
-    // let vaultRef = acct.borrow<&FlowToken.Vault>(from: /storage/flowTokenVault) ?? panic("Could not borrow Flow vault")
-    // self.sentVault <- vaultRef.withdraw(amount: amount) as! @FungibleToken.Vault
+    let vaultRef = acct.borrow<&FlowToken.Vault>(from: /storage/flowTokenVault) ?? panic("Could not borrow Flow vault")
+    self.sentVault <- vaultRef.withdraw(amount: amount) as! @FungibleToken.Vault
   }
 
   execute {
-    // let collection <- RegistryFamilyContract.batchMintCollectibleFromFamily(familyID: familyID, templateIDs: templateIDs, paymentVault: <-self.sentVault)
-    let collection <- RegistryFamilyContract.batchMintCollectibleFromFamily(familyID: familyID, templateIDs: templateIDs)
+    let collection <- RegistryFamilyContract.batchMintCollectibleFromFamily(familyID: familyID, templateIDs: templateIDs, paymentVault: <-self.sentVault)
     self.receiverReference.batchDeposit(collection: <-collection)
   }
 }

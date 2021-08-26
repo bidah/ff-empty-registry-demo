@@ -154,7 +154,8 @@ module.exports = class DappLib {
       },
       "batch_mint_collectible_from_family",
       {
-        familyID: { value: parseInt(data.familyID), type: t.UInt32 },
+        // familyID: { value: parseInt(data.familyID), type: t.UInt32 },
+        familyID: { value: 1, type: t.UInt32 },
         templateIDs: { value: [1, 2], type: t.Array(t.UInt32) },
         amount: { value: "1.0", type: t.UFix64 },
       }
@@ -166,6 +167,27 @@ module.exports = class DappLib {
       result: result.callData,
     };
   }
+
+  static async listUserCollectibles(data) {
+    let result = await Blockchain.get(
+      {
+        config: DappLib.getConfig(),
+        roles: {},
+      },
+      "list_user_collectibles",
+      {
+        acct: { value: data.account, type: t.Address },
+      }
+    );
+
+    console.log(result.callData);
+    return {
+      type: DappLib.DAPP_RESULT_OBJECT,
+      label: "listUserCollectibles: ",
+      result: result.callData,
+    };
+  }
+
   /********** FLOW TOKEN **********/
 
   static async getBalance(data) {

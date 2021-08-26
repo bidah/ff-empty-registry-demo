@@ -18,6 +18,24 @@ module.exports = class DappScripts {
 		`;
 	}
 
+	static list_user_collectibles() {
+		return fcl.script`
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				
+				pub fun main(addr: Address): {UInt64: RegistryFamilyContract.Template}? {
+				  let account = getAccount(addr)
+				  
+				  if let ref = account.getCapability<&{RegistryFamilyContract.CollectionPublic}>(RegistryFamilyContract.CollectionPublicPath).borrow() {
+				    let collection = ref.listCollectibles()
+				    return collection
+				  }
+				  
+				  return nil
+				
+				}
+		`;
+	}
+
 	static get_family() {
 		return fcl.script`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
@@ -43,7 +61,7 @@ module.exports = class DappScripts {
 
 	static flowtoken_get_balance() {
 		return fcl.script`
-				import FungibleToken from 0x01cf0e2f2f715450
+				import FungibleToken from 0xee82856bf20e2aa6
 				import FlowToken from 0x0ae53cb6e3f42a79
 				
 				pub fun main(account: Address): UFix64 {
