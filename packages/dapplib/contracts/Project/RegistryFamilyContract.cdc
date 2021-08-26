@@ -311,7 +311,7 @@ pub contract RegistryFamilyContract: RegistryInterface {
     return families
   }
 
-  pub fun listFamilyTemplates(tenant: &tenant, familyID: UInt32): [UInt32] {
+  pub fun listFamilyTemplates(tenant: &Tenant, familyID: UInt32): [UInt32] {
     pre {
       tenant.families[familyID] != nil : "Could not list family templates: family does not exist."
     }
@@ -323,11 +323,11 @@ pub contract RegistryFamilyContract: RegistryInterface {
     return report
   }
 
-  pub fun getFamily(familyID: UInt32): FamilyReport {
+  pub fun getFamily(tenant: &Tenant, familyID: UInt32): FamilyReport {
     pre {
-      self.families[familyID] != nil : "Could not get family: family does not exist."
+      tenant.families[familyID] != nil : "Could not get family: family does not exist."
     }
-    let el = &self.families[familyID] as! &Family
+    let el = &tenant.families[familyID] as! &Family
     let report = FamilyReport(
       name: el.name, 
       familyID: el.familyID, 
