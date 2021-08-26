@@ -337,11 +337,11 @@ pub contract RegistryFamilyContract: RegistryInterface {
     return report
   }
 
-  pub fun familyContainsTemplate(familyID: UInt32, templateID: UInt32): Bool {
+  pub fun familyContainsTemplate(tenant: &Tenant, familyID: UInt32, templateID: UInt32): Bool {
     pre {
-      self.families[familyID] != nil : "Family does not exist"
+      tenant.families[familyID] != nil : "Family does not exist"
     }
-    let el = &self.families[familyID] as! &Family
+    let el = &tenant.families[familyID] as! &Family
     return el.templates.contains(templateID)
   }
  
