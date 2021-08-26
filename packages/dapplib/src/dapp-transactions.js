@@ -54,11 +54,11 @@ module.exports = class DappTransactions {
 		`;
 	}
 
-	static create_family() {
+	static create_template() {
 		return fcl.transaction`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
 				
-				transaction(name: String, price: UFix64) {
+				transaction(dna: String, name: String) {
 				
 				  var adminRef: &RegistryFamilyContract.Admin
 				
@@ -67,7 +67,7 @@ module.exports = class DappTransactions {
 				  }
 				
 				  execute {
-				    self.adminRef.createFamily(name: name, price: price)
+				    self.adminRef.createTemplate(dna: dna, name: name)
 				  }
 				}
 				 
@@ -94,11 +94,11 @@ module.exports = class DappTransactions {
 		`;
 	}
 
-	static create_template() {
+	static create_family() {
 		return fcl.transaction`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
 				
-				transaction(dna: String, name: String) {
+				transaction(name: String, price: UFix64) {
 				
 				  var adminRef: &RegistryFamilyContract.Admin
 				
@@ -107,7 +107,7 @@ module.exports = class DappTransactions {
 				  }
 				
 				  execute {
-				    self.adminRef.createTemplate(dna: dna, name: name)
+				    self.adminRef.createFamily(name: name, price: price)
 				  }
 				}
 				 

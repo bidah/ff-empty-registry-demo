@@ -44,6 +44,11 @@ pub contract RegistryFamilyContract: RegistryInterface {
         self.admin <- create Admin()
         self.families <- {}
       }
+
+      destroy() {
+        destroy self.families
+        destroy self.admin
+      }
   }
 
   // instance

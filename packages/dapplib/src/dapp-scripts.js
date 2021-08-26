@@ -7,15 +7,14 @@ const fcl = require("@onflow/fcl");
 
 module.exports = class DappScripts {
 
-	static get_family() {
+	static list_templates_of_family() {
 		return fcl.script`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
 				
-				pub fun main(familyID: UInt32): RegistryFamilyContract.FamilyReport {
-				  let family = RegistryFamilyContract.getFamily(familyID: familyID)
-				  return family
+				pub fun main(familyID: UInt32): [UInt32] {
+				  let templates = RegistryFamilyContract.listFamilyTemplates(familyID: familyID)
+				  return templates
 				}
-				
 		`;
 	}
 
@@ -27,6 +26,18 @@ module.exports = class DappScripts {
 				  let ref = getAccount(addr).getCapability<&{RegistryFamilyContract.CollectionPublic}>(RegistryFamilyContract.CollectionPublicPath).check()
 				  return ref
 				}
+		`;
+	}
+
+	static get_family() {
+		return fcl.script`
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				
+				pub fun main(familyID: UInt32): RegistryFamilyContract.FamilyReport {
+				  let family = RegistryFamilyContract.getFamily(familyID: familyID)
+				  return family
+				}
+				
 		`;
 	}
 
@@ -44,17 +55,6 @@ module.exports = class DappScripts {
 				  
 				  return nil
 				
-				}
-		`;
-	}
-
-	static list_templates_of_family() {
-		return fcl.script`
-				import RegistryFamilyContract from 0x01cf0e2f2f715450
-				
-				pub fun main(familyID: UInt32): [UInt32] {
-				  let templates = RegistryFamilyContract.listFamilyTemplates(familyID: familyID)
-				  return templates
 				}
 		`;
 	}
