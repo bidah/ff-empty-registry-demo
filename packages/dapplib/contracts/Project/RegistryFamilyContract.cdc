@@ -237,7 +237,7 @@ pub contract RegistryFamilyContract: RegistryInterface {
       pre {
         self.templates.contains(templateID): "Could not mint collectible: template does not exist."
       }
-      return <- create Collectible(tenant: tenant, templateID: templateID)
+      return <- create Collectible(tenant: self.tenant, templateID: templateID)
     }
   }
 
