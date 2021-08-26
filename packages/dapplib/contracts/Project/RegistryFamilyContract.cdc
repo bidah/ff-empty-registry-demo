@@ -176,7 +176,7 @@ pub contract RegistryFamilyContract: RegistryInterface {
       pre {
         tenant.families[familyID] != nil : "Could not borrow family: family does not exist."
       }
-      let familyToDelete <- self.tenant.families.remove(key: familyID)!
+      let familyToDelete <- tenant.families.remove(key: familyID)!
       destroy familyToDelete
     }
 
