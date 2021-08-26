@@ -240,7 +240,7 @@ pub contract RegistryFamilyContract: RegistryInterface {
       pre {
         self.templates.contains(templateID): "Could not mint collectible: template does not exist."
       }
-      return <- create Collectible(templateID: templateID)
+      return <- create Collectible(tenant: tenant, templateID: templateID)
     }
   }
 
@@ -288,11 +288,11 @@ pub contract RegistryFamilyContract: RegistryInterface {
     let collection <- create Collection()
 
     for ID in templateIDs {
-      if !RegistryFamilyContract.familyContainsTemplate(tenant: &Tenant, familyID: familyID, templateID: ID) {
+      if !RegistryFamilyContract.familyContainsTemplate(tenant: tenant, familyID: familyID, templateID: ID) {
         continue
       }
       log("depositing collectible to collection")
-      collection.deposit(token: <- create Collectible(templateID: ID))
+      collection.deposit(token: <- create Collectible(tenant: tenant, templateID: ID))
     }
       log("done depositing")
     // destroy paymentVault
