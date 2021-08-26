@@ -33,22 +33,22 @@ pub contract RegistryFamilyContract: RegistryInterface {
     pub let CollectionPublicPath: PublicPath
     pub let AdminStoragePath: StoragePath
 
-      init() {
-        self.templates = {}
-        self.totalCollectibles = 0
-        self.nextTemplateID = 1
-        self.nextFamilyID = 1
-        self.CollectionStoragePath = /storage/CollectibleCollection
-        self.CollectionPublicPath = /public/CollectibleCollectionPublic
-        self.AdminStoragePath = /storage/CollectibleAdmin
-        self.admin <- create Admin()
-        self.families <- {}
-      }
+    init() {
+      self.templates = {}
+      self.totalCollectibles = 0
+      self.nextTemplateID = 1
+      self.nextFamilyID = 1
+      self.CollectionStoragePath = /storage/CollectibleCollection
+      self.CollectionPublicPath = /public/CollectibleCollectionPublic
+      self.AdminStoragePath = /storage/CollectibleAdmin
+      self.admin <- create Admin()
+      self.families <- {}
+    }
 
-      destroy() {
-        destroy self.families
-        destroy self.admin
-      }
+    destroy() {
+      destroy self.families
+      destroy self.admin
+    }
   }
 
   // instance
@@ -352,10 +352,9 @@ pub contract RegistryFamilyContract: RegistryInterface {
   init() {
     // Initialize clientTenants
     self.clientTenants = {}
-
     // Set Named paths
-    self.TenantStoragePath = /storage/RegistrySampleContractTenant
-    self.TenantPublicPath = /public/RegistrySampleContractTenant
+    self.TenantStoragePath = /storage/RegistryFamilyContractTenant
+    self.TenantPublicPath = /public/RegistryFamilyContractTenant
 
     /////////////////////////
   }

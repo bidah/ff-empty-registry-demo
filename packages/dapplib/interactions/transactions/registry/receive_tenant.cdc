@@ -1,4 +1,4 @@
-import RegistryFamilyContract from Project.RegistrySampleContract
+import RegistryFamilyContract from Project.RegistryFamilyContract
 import RegistryService from Project.RegistryService
 
 // This transaction allows any Tenant to receive a Tenant Resource from
@@ -16,7 +16,7 @@ transaction() {
       let authNFTRef = signer.borrow<&RegistryService.AuthNFT>(from: RegistryService.AuthStoragePath)
                         ?? panic("Could not borrow the AuthNFT")
       
-      // save the new Tenant resource from RegistrySampleContract to account storage
+      // save the new Tenant resource from RegistryFamilyContract to account storage
       signer.save(<-RegistryFamilyContract.instance(authNFT: authNFTRef), to: RegistryFamilyContract.TenantStoragePath)
 
       // link the Tenant resource to the public

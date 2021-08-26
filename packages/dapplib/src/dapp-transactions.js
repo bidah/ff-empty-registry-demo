@@ -7,27 +7,6 @@ const fcl = require("@onflow/fcl");
 
 module.exports = class DappTransactions {
 
-	static add_template_to_family() {
-		return fcl.transaction`
-				
-				import RegistryFamilyContract from 0x01cf0e2f2f715450
-				
-				transaction(familyID: UInt32, templateID: UInt32) {
-				
-				  var adminRef: &RegistryFamilyContract.Admin
-				
-				  prepare(acct: AuthAccount) {
-				    self.adminRef = acct.borrow<&RegistryFamilyContract.Admin>(from: RegistryFamilyContract.AdminStoragePath) ?? panic("Cannot borrow admin ref")
-				  }
-				
-				  execute {
-				    let familyRef = self.adminRef.borrowFamily(familyID: familyID)
-				    familyRef.addTemplate(templateID: templateID)
-				  }
-				}
-		`;
-	}
-
 	static batch_mint_collectible_from_family() {
 		return fcl.transaction`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
@@ -54,11 +33,12 @@ module.exports = class DappTransactions {
 		`;
 	}
 
-	static create_template() {
+	static add_template_to_family() {
 		return fcl.transaction`
+				
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
 				
-				transaction(dna: String, name: String) {
+				transaction(familyID: UInt32, templateID: UInt32) {
 				
 				  var adminRef: &RegistryFamilyContract.Admin
 				
@@ -67,10 +47,10 @@ module.exports = class DappTransactions {
 				  }
 				
 				  execute {
-				    self.adminRef.createTemplate(dna: dna, name: name)
+				    let familyRef = self.adminRef.borrowFamily(familyID: familyID)
+				    familyRef.addTemplate(templateID: templateID)
 				  }
 				}
-				 
 		`;
 	}
 
@@ -91,6 +71,26 @@ module.exports = class DappTransactions {
 				    }
 				  }
 				
+		`;
+	}
+
+	static create_template() {
+		return fcl.transaction`
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				
+				transaction(dna: String, name: String) {
+				
+				  var adminRef: &RegistryFamilyContract.Admin
+				
+				  prepare(acct: AuthAccount) {
+				    self.adminRef = acct.borrow<&RegistryFamilyContract.Admin>(from: RegistryFamilyContract.AdminStoragePath) ?? panic("Cannot borrow admin ref")
+				  }
+				
+				  execute {
+				    self.adminRef.createTemplate(dna: dna, name: name)
+				  }
+				}
+				 
 		`;
 	}
 
@@ -166,7 +166,7 @@ module.exports = class DappTransactions {
 				      let authNFTRef = signer.borrow<&RegistryService.AuthNFT>(from: RegistryService.AuthStoragePath)
 				                        ?? panic("Could not borrow the AuthNFT")
 				      
-				      // save the new Tenant resource from RegistrySampleContract to account storage
+				      // save the new Tenant resource from RegistryFamilyContract to account storage
 				      signer.save(<-RegistryFamilyContract.instance(authNFT: authNFTRef), to: RegistryFamilyContract.TenantStoragePath)
 				
 				      // link the Tenant resource to the public
