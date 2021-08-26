@@ -22,27 +22,16 @@ module.exports = class DappScripts {
 		return fcl.script`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
 				
-				  pub fun main(addr: Address): {UInt64: RegistryFamilyContract.Template}? {
-				    let account = getAccount(addr)
-				    
-				    if let ref = account.getCapability<&{RegistryFamilyContract.CollectionPublic}>(RegistryFamilyContract.CollectionPublicPath).borrow() {
-				      let collection = ref.listCollectibles()
-				      return collection
-				    }
-				    
-				    return nil
-				
+				pub fun main(addr: Address): {UInt64: RegistryFamilyContract.Template}? {
+				  let account = getAccount(addr)
+				  
+				  if let ref = account.getCapability<&{RegistryFamilyContract.CollectionPublic}>(RegistryFamilyContract.CollectionPublicPath).borrow() {
+				    let collection = ref.listCollectibles()
+				    return collection
 				  }
-		`;
-	}
-
-	static list_templates_of_family() {
-		return fcl.script`
-				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				  
+				  return nil
 				
-				pub fun main(familyID: UInt32): [UInt32] {
-				  let templates = RegistryFamilyContract.listFamilyTemplates(familyID: familyID)
-				  return templates
 				}
 		`;
 	}
@@ -56,6 +45,17 @@ module.exports = class DappScripts {
 				  return family
 				}
 				
+		`;
+	}
+
+	static list_templates_of_family() {
+		return fcl.script`
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				
+				pub fun main(familyID: UInt32): [UInt32] {
+				  let templates = RegistryFamilyContract.listFamilyTemplates(familyID: familyID)
+				  return templates
+				}
 		`;
 	}
 

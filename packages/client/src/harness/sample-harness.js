@@ -190,6 +190,16 @@ export default class SampleHarness extends LitElement {
           ></text-widget>
           <text-widget field="amount" label="Amount: "></text-widget>
         </action-card>
+
+        <action-card
+          title="List User Collectibles"
+          description="list collectibles after pack buy"
+          action="listUserCollectibles"
+          method="get"
+          fields="account"
+        >
+          <account-widget field="account" label="Account"> </account-widget>
+        </action-card>
         <!-- End Family Contract -->
       </page-body>
       <page-panel id="resultPanel"></page-panel>

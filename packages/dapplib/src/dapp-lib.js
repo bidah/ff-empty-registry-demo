@@ -180,9 +180,10 @@ module.exports = class DappLib {
       }
     );
 
+    console.log(result.callData);
     return {
-      type: DappLib.DAPP,
-      label: "listTemplatesOfFamily: ",
+      type: DappLib.DAPP_RESULT_OBJECT,
+      label: "listUserCollectibles: ",
       result: result.callData,
     };
   }
