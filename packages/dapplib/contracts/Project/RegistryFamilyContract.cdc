@@ -297,10 +297,10 @@ pub contract RegistryFamilyContract: RegistryInterface {
     return <-collection
   }
 
-  pub fun listFamilies(): [FamilyReport] {
+  pub fun listFamilies(tenant): [FamilyReport] {
     var families: [FamilyReport] = []
-    for key in self.families.keys {
-      let el = &self.families[key] as &Family
+    for key in tenant.families.keys {
+      let el = &tenant.families[key] as &Family
       families.append(FamilyReport(
         name: el.name, 
         familyID: el.familyID, 
