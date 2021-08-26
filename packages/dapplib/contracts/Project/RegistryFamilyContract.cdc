@@ -19,8 +19,27 @@ pub contract RegistryFamilyContract: RegistryInterface {
   // 
   pub resource Tenant {
 
+    access(self) var templates: {UInt32: Template}
+    access(self) var families: @{UInt32: Family}
+
+    pub var nextTemplateID: UInt32
+    pub var nextFamilyID: UInt32
+    pub var totalCollectibles: UInt64
+    
+    pub let CollectionStoragePath: StoragePath
+    pub let CollectionPublicPath: PublicPath
+    pub let AdminStoragePath: StoragePath
+
       init() {
-  
+        self.templates = {}
+        self.totalCollectibles = 0
+        self.nextTemplateID = 1
+        self.nextFamilyID = 1
+        self.CollectionStoragePath = /storage/CollectibleCollection
+        self.CollectionPublicPath = /public/CollectibleCollectionPublic
+        self.AdminStoragePath = /storage/CollectibleAdmin
+        self.account.save<@Admin>(<- create Admin(), to: self.AdminStoragePath)
+        self.families <- {}
       }
   }
 
@@ -55,17 +74,6 @@ pub contract RegistryFamilyContract: RegistryInterface {
   // IDEA
   // To implement a packs module based on crypto dappies implementation
   // https://github.com/bebner/crypto-dappy/blob/master/cadence/contracts/DappyContract.cdc
-
-  access(self) var templates: {UInt32: Template}
-  access(self) var families: @{UInt32: Family}
-
-  pub var nextTemplateID: UInt32
-  pub var nextFamilyID: UInt32
-  pub var totalCollectibles: UInt64
-  
-  pub let CollectionStoragePath: StoragePath
-  pub let CollectionPublicPath: PublicPath
-  pub let AdminStoragePath: StoragePath
 
   pub fun createEmptyCollection(): @Collection {
     return <-create self.Collection()
@@ -339,15 +347,5 @@ pub contract RegistryFamilyContract: RegistryInterface {
     self.TenantPublicPath = /public/RegistrySampleContractTenant
 
     /////////////////////////
-
-    self.templates = {}
-    self.totalCollectibles = 0
-    self.nextTemplateID = 1
-    self.nextFamilyID = 1
-    self.CollectionStoragePath = /storage/CollectibleCollection
-    self.CollectionPublicPath = /public/CollectibleCollectionPublic
-    self.AdminStoragePath = /storage/CollectibleAdmin
-    self.account.save<@Admin>(<- create Admin(), to: self.AdminStoragePath)
-    self.families <- {}
   }
 }
