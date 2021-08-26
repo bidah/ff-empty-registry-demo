@@ -7,6 +7,18 @@ const fcl = require("@onflow/fcl");
 
 module.exports = class DappScripts {
 
+	static get_family() {
+		return fcl.script`
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				
+				pub fun main(familyID: UInt32): RegistryFamilyContract.FamilyReport {
+				  let family = RegistryFamilyContract.getFamily(familyID: familyID)
+				  return family
+				}
+				
+		`;
+	}
+
 	static check_collection() {
 		return fcl.script`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
@@ -33,18 +45,6 @@ module.exports = class DappScripts {
 				  return nil
 				
 				}
-		`;
-	}
-
-	static get_family() {
-		return fcl.script`
-				import RegistryFamilyContract from 0x01cf0e2f2f715450
-				
-				pub fun main(familyID: UInt32): RegistryFamilyContract.FamilyReport {
-				  let family = RegistryFamilyContract.getFamily(familyID: familyID)
-				  return family
-				}
-				
 		`;
 	}
 

@@ -14,9 +14,13 @@ Will be based on logic from CryptoDappies <https://github.com/bebner/crypto-dapp
 - [x] action card: get family
 - [x] action card: create template
 - [x] action card: add template to family
-- [ ] action card: list collectibles in family
-- [ ] action card: list collectible templates
-- [ ] action card: mint collectibles from family
+- [x] action card: list collectibles in family
+- [x] action card: list collectible templates
+- [x] action card: mint collectibles from family
+
+- [ ] add state vars and storage paths to Tenant Resource
+- [ ] add restrictive interface
+- [ ] re implement cards to use the composed contract with Tenant config
 
 # KNOWN ERRORS For Windows Users
 

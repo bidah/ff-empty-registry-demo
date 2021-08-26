@@ -26,7 +26,7 @@ transaction() {
       // If you add resource interfaces that Tenant must implement, you can
       // add those here and then uncomment the line below.
       // 
-      signer.link<&RegistrySampleContract.Tenant>(RegistrySampleContract.TenantPublicPath, target: RegistrySampleContract.TenantStoragePath)
+      signer.link<&RegistryFamilyContract.Tenant>(RegistryFamilyContract.TenantPublicPath, target: RegistryFamilyContract.TenantStoragePath)
     }
   }
 
