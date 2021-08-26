@@ -19,16 +19,18 @@ pub contract RegistryFamilyContract: RegistryInterface {
   // 
   pub resource Tenant {
 
-    access(self) var templates: {UInt32: Template}
-    access(self) var families: @{UInt32: Family}
+    // access(self) var templates: {UInt32: Template}
+    // access(self) var families: @{UInt32: Family}
+    pub(set) var templates: {UInt32: Template}
+    pub(set) var families: @{UInt32: Family}
 
-    pub var nextTemplateID: UInt32
-    pub var nextFamilyID: UInt32
-    pub var totalCollectibles: UInt64
+    pub(set) var nextTemplateID: UInt32
+    pub(set) var nextFamilyID: UInt32
+    pub(set) var totalCollectibles: UInt64
     
-    pub let CollectionStoragePath: StoragePath
-    pub let CollectionPublicPath: PublicPath
-    pub let AdminStoragePath: StoragePath
+    pub(set) let CollectionStoragePath: StoragePath
+    pub(set) let CollectionPublicPath: PublicPath
+    pub(set) let AdminStoragePath: StoragePath
 
       init() {
         self.templates = {}
@@ -286,7 +288,7 @@ pub contract RegistryFamilyContract: RegistryInterface {
     let collection <- create Collection()
 
     for ID in templateIDs {
-      if !tenant.familyContainsTemplate(familyID: familyID, templateID: ID) {
+      if !RegistryFamilyContract.familyContainsTemplate(tenant: &Tenant, familyID: familyID, templateID: ID) {
         continue
       }
       log("depositing collectible to collection")
