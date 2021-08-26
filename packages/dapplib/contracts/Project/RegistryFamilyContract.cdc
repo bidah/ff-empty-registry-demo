@@ -213,21 +213,22 @@ pub contract RegistryFamilyContract: RegistryInterface {
     pub var templates: [UInt32]
     pub var price: UFix64
     
-    init(name: String, price: UFix64) {
+    init(tenant: &Tenant, name: String, price: UFix64) {
       pre {
         name.length > 0: "Could not create family: name is required."
         price > 0.00 : "Could not create family: price is required to be higher than 0."
       }
+      self.tenant = tenant
       self.name = name
       self.price = price
-      self.familyID = RegistryFamilyContract.nextFamilyID
+      self.familyID = tenant.nextFamilyID
       self.templates = []
-      RegistryFamilyContract.nextFamilyID = RegistryFamilyContract.nextFamilyID + 1
+      self.tenant.nextFamilyID = tenant.nextFamilyID + 1
     }
 
     pub fun addTemplate(templateID: UInt32) {
       pre {
-        RegistryFamilyContract.templates[templateID] != nil : "Could not add collectible to pack: template does not exist."
+        self.tenant.templates[templateID] != nil : "Could not add collectible to pack: template does not exist."
       }
       self.templates.append(templateID)
     }
