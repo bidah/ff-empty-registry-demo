@@ -139,7 +139,7 @@ pub contract RegistryFamilyContract: RegistryInterface {
   }
 
   pub resource Admin {
-    let tenant: &Tenant
+    pub let tenant: &Tenant
     pub fun createTemplate(dna: String, name: String): UInt32 {
       pre {
         dna.length > 0 : "Could not create template: dna is required."
@@ -208,6 +208,7 @@ pub contract RegistryFamilyContract: RegistryInterface {
   }
 
   pub resource Family {
+    pub let tenant: &Tenant
     pub let name: String
     pub let familyID: UInt32
     pub var templates: [UInt32]
