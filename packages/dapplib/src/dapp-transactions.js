@@ -28,52 +28,6 @@ module.exports = class DappTransactions {
 		`;
 	}
 
-	static batch_mint_collectible_from_family() {
-		return fcl.transaction`
-				import RegistryFamilyContract from 0x01cf0e2f2f715450
-				import FungibleToken from 0x01cf0e2f2f715450
-				import FlowToken from 0x0ae53cb6e3f42a79
-				
-				transaction(familyID: UInt32, templateIDs: [UInt32], amount: UFix64 ) {
-				  let receiverReference: &RegistryFamilyContract.Collection{RegistryFamilyContract.Receiver}
-				  let sentVault: @FungibleToken.Vault
-				
-				  prepare(acct: AuthAccount) {
-				    self.receiverReference = acct.borrow<&RegistryFamilyContract.Collection>(from: RegistryFamilyContract.CollectionStoragePath) 
-				        ?? panic("Cannot borrow receiverReference")
-				    // let vaultRef = acct.borrow<&FlowToken.Vault>(from: /storage/flowTokenVault) ?? panic("Could not borrow Flow vault")
-				    // self.sentVault <- vaultRef.withdraw(amount: amount) as! @FungibleToken.Vault
-				  }
-				
-				  execute {
-				    // let collection <- RegistryFamilyContract.batchMintCollectibleFromFamily(familyID: familyID, templateIDs: templateIDs, paymentVault: <-self.sentVault)
-				    let collection <- RegistryFamilyContract.batchMintCollectibleFromFamily(familyID: familyID, templateIDs: templateIDs)
-				    self.receiverReference.batchDeposit(collection: <-collection)
-				  }
-				}
-		`;
-	}
-
-	static create_family() {
-		return fcl.transaction`
-				import RegistryFamilyContract from 0x01cf0e2f2f715450
-				
-				transaction(name: String, price: UFix64) {
-				
-				  var adminRef: &RegistryFamilyContract.Admin
-				
-				  prepare(acct: AuthAccount) {
-				    self.adminRef = acct.borrow<&RegistryFamilyContract.Admin>(from: RegistryFamilyContract.AdminStoragePath) ?? panic("Cannot borrow admin ref")
-				  }
-				
-				  execute {
-				    self.adminRef.createFamily(name: name, price: price)
-				  }
-				}
-				 
-		`;
-	}
-
 	static create_family_collection() {
 		return fcl.transaction`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
@@ -94,6 +48,32 @@ module.exports = class DappTransactions {
 		`;
 	}
 
+	static batch_mint_collectible_from_family() {
+		return fcl.transaction`
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				import FungibleToken from 0xee82856bf20e2aa6
+				import FlowToken from 0x0ae53cb6e3f42a79
+				
+				transaction(familyID: UInt32, templateIDs: [UInt32], amount: UFix64 ) {
+				  let receiverReference: &RegistryFamilyContract.Collection{RegistryFamilyContract.Receiver}
+				  let sentVault: @FungibleToken.Vault
+				
+				  prepare(acct: AuthAccount) {
+				    self.receiverReference = acct.borrow<&RegistryFamilyContract.Collection>(from: RegistryFamilyContract.CollectionStoragePath)
+				        ?? panic("Cannot borrow receiverReference")
+				    let vaultRef = acct.borrow<&FlowToken.Vault>(from: /storage/flowTokenVault) ?? panic("Could not borrow Flow vault")
+				    self.sentVault <- vaultRef.withdraw(amount: amount) as! @FungibleToken.Vault
+				  }
+				
+				  execute {
+				    let collection <- RegistryFamilyContract.batchMintCollectibleFromFamily(familyID: familyID, templateIDs: templateIDs, paymentVault: <-self.sentVault)
+				    self.receiverReference.batchDeposit(collection: <-collection)
+				  }
+				}
+				
+		`;
+	}
+
 	static create_template() {
 		return fcl.transaction`
 				import RegistryFamilyContract from 0x01cf0e2f2f715450
@@ -108,6 +88,26 @@ module.exports = class DappTransactions {
 				
 				  execute {
 				    self.adminRef.createTemplate(dna: dna, name: name)
+				  }
+				}
+				 
+		`;
+	}
+
+	static create_family() {
+		return fcl.transaction`
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
+				
+				transaction(name: String, price: UFix64) {
+				
+				  var adminRef: &RegistryFamilyContract.Admin
+				
+				  prepare(acct: AuthAccount) {
+				    self.adminRef = acct.borrow<&RegistryFamilyContract.Admin>(from: RegistryFamilyContract.AdminStoragePath) ?? panic("Cannot borrow admin ref")
+				  }
+				
+				  execute {
+				    self.adminRef.createFamily(name: name, price: price)
 				  }
 				}
 				 
@@ -148,11 +148,11 @@ module.exports = class DappTransactions {
 
 	static registry_receive_tenant() {
 		return fcl.transaction`
-				import RegistrySampleContract from 0x01cf0e2f2f715450
+				import RegistryFamilyContract from 0x01cf0e2f2f715450
 				import RegistryService from 0x01cf0e2f2f715450
 				
 				// This transaction allows any Tenant to receive a Tenant Resource from
-				// RegistrySampleContract. It saves the resource to account storage.
+				// RegistryFamilyContract. It saves the resource to account storage.
 				//
 				// Note that this can only be called by someone who has already registered
 				// with the RegistryService and received an AuthNFT.
@@ -161,13 +161,13 @@ module.exports = class DappTransactions {
 				
 				  prepare(signer: AuthAccount) {
 				    // save the Tenant resource to the account if it doesn't already exist
-				    if signer.borrow<&RegistrySampleContract.Tenant>(from: RegistrySampleContract.TenantStoragePath) == nil {
+				    if signer.borrow<&RegistryFamilyContract.Tenant>(from: RegistryFamilyContract.TenantStoragePath) == nil {
 				      // borrow a reference to the AuthNFT in account storage
 				      let authNFTRef = signer.borrow<&RegistryService.AuthNFT>(from: RegistryService.AuthStoragePath)
 				                        ?? panic("Could not borrow the AuthNFT")
 				      
 				      // save the new Tenant resource from RegistrySampleContract to account storage
-				      signer.save(<-RegistrySampleContract.instance(authNFT: authNFTRef), to: RegistrySampleContract.TenantStoragePath)
+				      signer.save(<-RegistryFamilyContract.instance(authNFT: authNFTRef), to: RegistryFamilyContract.TenantStoragePath)
 				
 				      // link the Tenant resource to the public
 				      //
@@ -181,7 +181,7 @@ module.exports = class DappTransactions {
 				  }
 				
 				  execute {
-				    log("Registered a new Tenant for RegistrySampleContract.")
+				    log("Registered a new Tenant for RegistryFamilyContract.")
 				  }
 				}
 				
