@@ -260,13 +260,13 @@ pub contract RegistryFamilyContract: RegistryInterface {
     pub let id: UInt64
     pub let data: Template
 
-    init(templateID: UInt32) {
+    init(tenant: &Tenant, templateID: UInt32) {
       pre {
-        RegistryFamilyContract.templates[templateID] != nil : "Could not create collectible: template does not exist."
+        tenant.templates[templateID] != nil : "Could not create collectible: template does not exist."
       }
-      let collectible = RegistryFamilyContract.templates[templateID]!
-      RegistryFamilyContract.totalCollectibles = RegistryFamilyContract.totalCollectibles + 1
-      self.id = RegistryFamilyContract.totalCollectibles
+      let collectible = tenant.templates[templateID]!
+      tenant.totalCollectibles = tenant.totalCollectibles + 1
+      self.id = tenant.totalCollectibles
       self.data = Template(templateID: templateID, dna: collectible.dna, name: collectible.name)
     }
   }
